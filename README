@@ -1,9 +1,9 @@
 basic usage:
 
-Tom want to save dayly, weekly, monthly and yearly a zone of his machine on a server in witch he has ssh access without passwd
+Tom want to save daily, weekly, monthly and yearly a zone of his machine on a server in witch he has ssh access without password.
  
-save on his machine in ~
-rotation on the server in ~
+file "pushsave" on his machine in ~
+file "rotation" on the server in ~
 logs in ~/save.log on his machine
 
 
