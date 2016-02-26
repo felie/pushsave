@@ -1,0 +1,70 @@
+#!/bin/bash
+#
+#-----------------------------------------
+# This is a part of Verac project.
+# Name:         pushsave
+# Author:       François Elie
+# Copyright:    (C) François Elie
+# Licence:      GNU General Public Licence version 2
+# Email:        francois at elie.org
+#-----------------------------------------
+#
+# rotation des archives
+DATE=$1
+URL=$2
+
+D="0__Daily___"
+W="1__Weekly__"
+M="2__Monthly_"
+Y="3__yearly__"
+
+# achives to keep
+NB_DAYS=10
+NB_WEEKS=4
+NB_MONTHS=12
+NB_YEARS=10
+crucial_week_day=4
+crucial_month_day=25
+crucial_month=02
+
+year_day=`date +%F`
+month_day=`date +"%d"`
+week_day=`date +"%u"`
+month=`date +"%m"`
+
+echo  $month 
+exit
+cd $URL
+
+rm last
+ln -s $D"0001_"$DATE last
+
+# rotation function
+# $1 nbr to rotate
+# $2 prefix to rotate
+rotate()
+  {
+  if [ "$3" = "$4" ]
+    then	
+        echo $5
+        cp -al $THIS $2"0000_"$DATE >/dev/null 2>&1
+	NB=$1
+	for (( NUM=$NB ; NUM+1 ; NUM-- )); 
+	do
+		CIBLE=$NUM
+		((CIBLE++))
+		A=`printf "%04d\n" $NUM`
+		B=`printf "%04d\n" $CIBLE`
+		rename  "s/"$2$A"_/"$2$B"_/" * 
+	done
+	# delete surnumerous
+	((NB++)) 
+	C=`printf "%04d\n" $NB`
+	rm -Rf "$2$C"* 
+  fi
+  }
+
+rotate $NB_DAYS $D 1 1 daily
+THIS=$D"0001_"$DATE
+rotate $NB_WEEKS $W $week_day $crucial_week_day weekly
+rotate $NB_MONTHS $M $month_day $crucial_month_day monthly && rotate $NB_YEARS $Y $crucial_month $month yearly

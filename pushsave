@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+#-----------------------------------------
+# This is a part of Verac project.
+# Name:         pushsave
+# Author:       François Elie
+# Copyright:    (C) François Elie
+# Licence:      GNU General Public Licence version 2
+# Email:        francois at elie.org
+#-----------------------------------------
+#
+# an incrmental archive script
+#  in PUSH
+#  using hardlinks
+#
+# for automatic execution, consider cron
+#   to edit your crontab:
+#      crontab -e
+#   add a line like this (here execution at 22h30 everyday)
+#      30 22 * * * ./pushsave
+
+# the archives server ... 
+SERVER=server.org
+
+# a user on this server
+USER=tom	
+
+# this script suppose
+#   a ssh access without password on this $SERVER for this $USER
+#      if you haven't couple of keys
+#           ssh-keygen
+#      copy public_key on server in the .ssh directory of your user on this server
+#           ssh-copy-id -i ~/.ssh/id_rsa.pub <SERVER>
+#   a /backup/$USER for this $USER (/backup can be a symbolic link)
+
+# a user can save several machines - consider copy this script to save another thing
+CLIENT=machine	
+
+# the zone to save, a user can save several zone on each machine
+TO_SAVE=/home/tom/zone
+# its name (may be not the same, no "/" in this name
+NAME=zone	
+
+# don't touch after without precaution...
+
+# for each zone
+cd ~
+DATE=`date +%F_at_%T`
+DESTC="/backup/$USER/$CLIENT"
+DEST="$DESTC/$NAME"
+ssh $USER@$SERVER "mkdir "$DESTC";mkdir "$DEST" >/dev/null 2>&1;mkdir "$DEST/last";exit" 
+(/usr/bin/time --format="$DATE in %E" rsync --progress --link-dest="$DEST/last" -az $TO_SAVE/ "$USER@$SERVER:$DEST/0__Daily___0000_$DATE" ) 2>> save.log
+(ssh $USER@$SERVER "./rotation $DATE "$DEST";exit") >> save.log
+
+# todo
+#  exclusions
+#  list of zones
