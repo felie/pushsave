@@ -32,16 +32,13 @@ month_day=`date +"%d"`
 week_day=`date +"%u"`
 month=`date +"%m"`
 
-echo  $month 
-exit
 cd $URL
 
 rm last
 ln -s $D"0001_"$DATE last
 
 # rotation function
-# $1 nbr to rotate
-# $2 prefix to rotate
+# parameters: nbr to rotate, rotation prefix, tocompare1, tocompare2, notification to put in save.log
 rotate()
   {
   if [ "$3" = "$4" ]
