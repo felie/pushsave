@@ -1,4 +1,7 @@
-basic usage:
+Pushsave is a push system to save (using hardlinks to save space) a zone via ssh (without password). 
+His archive rotation system is versatile.
+
+Basic usage:
 
 Tom want to save daily, weekly, monthly and yearly a zone of his machine on a server in witch he has ssh access without password.
  
