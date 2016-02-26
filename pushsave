@@ -48,7 +48,7 @@ cd ~
 DATE=`date +%F_at_%T`
 DESTC="/backup/$USER/$CLIENT"
 DEST="$DESTC/$NAME"
-ssh $USER@$SERVER "mkdir "$DESTC";mkdir "$DEST" >/dev/null 2>&1;mkdir "$DEST/last";exit" 
+ssh $USER@$SERVER "mkdir "$DESTC" 2>/dev/null;mkdir "$DEST" 2>/dev/null;mkdir "$DEST/last" 2>/dev/null;exit" 
 (/usr/bin/time --format="$DATE in %E" rsync --progress --link-dest="$DEST/last" -az $TO_SAVE/ "$USER@$SERVER:$DEST/0__Daily___0000_$DATE" ) 2>> save.log
 (ssh $USER@$SERVER "./rotation $DATE "$DEST";exit") >> save.log
 
